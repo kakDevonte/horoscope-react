@@ -1,0 +1,41 @@
+.root {
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+  gap: 5px;
+}
+
+.img {
+  width: 7em;
+}
+
+.void {
+  flex: 1;
+}
+
+.shop {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+
+  span {
+    font-family: Nasalization;
+    font-size: 0.9em;
+  }
+
+  img {
+    width: 1em;
+    height: 1em;
+  }
+
+  p {
+    font-size: 0.7em;
+    font-style: normal;
+    font-family: GothaPro;
+    margin: 0;
+    color: rgba(187, 190, 209, 1);
+    border-bottom: 1px dashed rgba(187, 190, 209, 1);
+  }
+}

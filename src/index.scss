@@ -1,0 +1,24 @@
+html, body { }
+body {
+
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  position: fixed;
+}
+
+@font-face {
+  font-family: Nasalization;
+  src: url('./assets/fonts/Nasalization.otf');
+}
+
+@font-face {
+  font-family: GothaPro;
+  src: url('./assets/fonts/GothaPro.otf');
+}
+
+#root {
+  height: 100vh; width: 100vw;
+  background: linear-gradient(188.73deg, #150A57 -3.17%, #02072B 45.15%);
+
+}
