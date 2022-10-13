@@ -14,6 +14,7 @@ import scorpio from "../../assets/images/icons/scorpio.png";
 import taurus from "../../assets/images/icons/taurus.png";
 import virgo from "../../assets/images/icons/virgo.png";
 import { Button } from "../Button";
+import { useNavigate } from "react-router-dom";
 
 const signs = [
   { name: "Овен", image: aries },
@@ -30,12 +31,17 @@ const signs = [
   { name: "Рыбы", image: pisces },
 ];
 export const ChoiceSign = () => {
-  // const [isActive, setIsActive] = React.useState(false);
+  const [isActive, setIsActive] = React.useState(true);
   const [signName, setSignName] = React.useState("");
+  const navigate = useNavigate();
 
   const onClickSign = (name) => {
-    // setIsActive(!isActive);
+    setIsActive(false);
     setSignName(name);
+  };
+
+  const onClickNext = () => {
+    navigate("/home");
   };
 
   return (
@@ -51,7 +57,7 @@ export const ChoiceSign = () => {
           />
         ))}
       </div>
-      <Button />
+      <Button title={"Далее"} onClick={onClickNext} disabled={isActive} />
     </div>
   );
 };

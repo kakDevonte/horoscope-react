@@ -1,0 +1,127 @@
+.home {
+  height: 100%;
+}
+
+.root {
+  min-height: 93%;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  grid-template-columns: 1fr;
+  grid-gap: 5px;
+
+
+  //@media (max-height: 500px) {
+  //  grid-template-rows: 0.1fr 0.5fr 0.1fr 0.4fr 0.1fr auto;
+  //}
+}
+
+.main {
+  display: flex;
+  flex-direction: column;
+}
+
+.container {
+  flex-shrink: 0;
+  flex-grow: 1;
+  flex-basis: 50%;
+  //flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+.header {
+  display: flex;
+  align-items: center;
+
+  color: #ffffff;
+  font-family: GothaPro;
+}
+
+.predict {
+  //align-self: center;
+}
+
+.predictContainer {
+  flex-shrink: 0;
+  flex-grow: 1;
+  flex-basis: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+.who {
+  font-size: 0.6em;
+  color: rgba(21, 112, 254, 1);
+  border-bottom: 1px dashed  rgba(21, 112, 254, 1);
+
+  &:hover {
+    cursor: pointer;
+  }
+}
+
+.sign {
+  font-size: 0.8em;
+  margin-left: auto;
+  color: rgba(187, 190, 209, 1);
+  border-bottom: 1px dashed rgba(187, 190, 209, 1);
+  &:hover {
+    cursor: pointer;
+  }
+}
+
+.moon {
+  width: 1.25em;
+  margin-right: 5px;
+}
+
+.weekBtns {
+  display: flex;
+  max-height: 100px;
+}
+
+.predictBtns {
+  align-self: center;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.button {
+    width: 100%;
+    font-family: Nasalization;
+    margin: 5px;
+    font-size: 0.6em;
+    padding: 10px 10px;
+    background: #090F3E;
+    text-align: center;
+    text-transform: uppercase;
+    transition: 0.5s;
+    color: white;
+    border-radius: 10px;
+    display: block;
+    border: none;
+
+    &:active {
+      scale: 0.8;
+    }
+
+    &.selected {
+      background-image:  linear-gradient(87.87deg, #0255D6 42.87%, #15FFE3 92.45%);
+    }
+}
+
+.repost {
+  align-self: end;
+  font-family: GothaPro;
+  font-style: normal;
+  font-size: 12px;
+  text-align: center;
+  color: #BCBED1;
+}
+
+.repostBtns {
+  display: flex;
+}
+

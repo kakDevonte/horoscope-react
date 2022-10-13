@@ -3,10 +3,15 @@
   border: 2px solid rgba(24, 32, 89, 1);
   border-radius: 8px;
   width: 100%;
-  min-width: 50px;
-  max-width: 150px;
+  max-width: 130px;
   aspect-ratio: 1 / 1;
   color: #ffffff;
+
+
+  @media (max-height: 500px) {
+    max-width: 90px;
+    font-size: 0.65em;
+  }
 
   &:hover {
     cursor: pointer;
