@@ -11,14 +11,17 @@ import { Prediction } from "../Prediction";
 import RepostButton from "../RepostButton";
 import { useNavigate } from "react-router-dom";
 import { ModalInfo } from "../ModalInfo";
+import {
+  useHoroscopeActions,
+  useHoroscopeState,
+} from "../../context/horoscope-context";
 
 const moon = [stage1, stage2, stage3, stage4, stage5];
 const MAX_DAY = 5;
-const day = 5;
 
 export const HomePage = () => {
-  const [isSelected, setSelected] = React.useState();
-  const [btnIndex, setBtnIndex] = React.useState(0);
+  const { scene, user } = useHoroscopeState();
+  const { setScene } = useHoroscopeActions();
   const [isFullPredict, setIsFullPredict] = React.useState(false);
   const [isShowInfo, seIsShowInfo] = React.useState(false);
   const [height, setHeight] = React.useState(0);
@@ -37,8 +40,8 @@ export const HomePage = () => {
     setIsFullPredict(true);
   };
 
-  const onClickWeekBtn = (index) => {
-    setBtnIndex(index);
+  const onClickWeekBtn = (scene) => {
+    setScene(scene);
   };
 
   const getMoon = () => {
@@ -48,7 +51,7 @@ export const HomePage = () => {
         <img
           key={i}
           className={styles.moon}
-          src={i <= day ? moon[i - 1] : clear}
+          src={i <= user.day ? moon[i - 1] : clear}
           alt={""}
         />
       );
@@ -78,25 +81,25 @@ export const HomePage = () => {
             <div className={styles.weekBtns}>
               <button
                 className={`${styles.button} ${
-                  btnIndex === 1 && styles.selected
+                  scene === "today" && styles.selected
                 }`}
-                onClick={() => onClickWeekBtn(1)}
+                onClick={() => onClickWeekBtn("today")}
               >
                 Сегодня
               </button>
               <button
                 className={`${styles.button} ${
-                  btnIndex === 2 && styles.selected
+                  scene === "tomorrow" && styles.selected
                 }`}
-                onClick={() => onClickWeekBtn(2)}
+                onClick={() => onClickWeekBtn("tomorrow")}
               >
                 Завтра
               </button>
               <button
                 className={`${styles.button} ${
-                  btnIndex === 3 && styles.selected
+                  scene === "week" && styles.selected
                 }`}
-                onClick={() => onClickWeekBtn(3)}
+                onClick={() => onClickWeekBtn("week")}
               >
                 Неделя
               </button>
