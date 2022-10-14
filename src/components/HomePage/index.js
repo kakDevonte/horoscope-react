@@ -6,6 +6,7 @@ import stage2 from "../../assets/images/moon/stage-2.png";
 import stage3 from "../../assets/images/moon/stage-3.png";
 import stage4 from "../../assets/images/moon/stage-4.png";
 import stage5 from "../../assets/images/moon/stage-5.png";
+import star from "../../assets/images/star.png";
 import { MainSign } from "../MainSign";
 import { Prediction } from "../Prediction";
 import RepostButton from "../RepostButton";
@@ -15,6 +16,7 @@ import {
   useHoroscopeActions,
   useHoroscopeState,
 } from "../../context/horoscope-context";
+import { interval } from "../../utils";
 
 const moon = [stage1, stage2, stage3, stage4, stage5];
 const MAX_DAY = 5;
@@ -23,6 +25,8 @@ export const HomePage = () => {
   const { scene, user } = useHoroscopeState();
   const { setScene, setFullPredict } = useHoroscopeActions();
   const [isShowInfo, seIsShowInfo] = React.useState(false);
+  const [isAd, setIsAd] = React.useState(false);
+  const [isTakeBonus, setIsTakeBonus] = React.useState(false);
   const [height, setHeight] = React.useState(0);
   const navigate = useNavigate();
 
@@ -69,6 +73,40 @@ export const HomePage = () => {
   const onClickShowInfo = () => {
     seIsShowInfo(!isShowInfo);
   };
+
+  const isAds = () => {
+    if (isAd) {
+      if (this.state.countOfAdsPerDay >= 3) setIsAd(false)ds.isAds = false;
+      if (this.state.dateOfShowAds) {
+        let date1 = new Date(this.state.dateOfShowAds);
+        let date2 = new Date();
+        const diff = interval(date1, date2);
+        ads.isAds =
+          diff.hours >= 6 ||
+          diff.days >= 1 ||
+          diff.months >= 1 ||
+          diff.years >= 1;
+      } else ads.isAds = true;
+    } else {
+      if (this.state.dateOfGetStars) {
+        let date1 = new Date(this.state.dateOfGetStars);
+        let date2 = new Date();
+
+        const diff = interval(date1, date2);
+        if (
+          diff.hours >= 21 ||
+          diff.days >= 1 ||
+          diff.months >= 1 ||
+          diff.years >= 1
+        ) {
+          ads.isTakeBonus = true;
+        }
+      } else {
+        ads.isTakeBonus = true;
+      }
+    }
+  };
+
   return (
     <div className={`${styles.home} ${isShowInfo && styles.bg}`}>
       {isShowInfo && <ModalInfo onClick={onClickShowInfo} />}
@@ -128,7 +166,11 @@ export const HomePage = () => {
                 Показать полностью
               </button>
               <button id="btn2" className={styles.button}>
-                Кнопка 2
+                <span className={styles.adBtnText}>
+                  Посмотреть рекламу +2
+                  <img src={stage1} />
+                  +1 <img src={star} />
+                </span>
               </button>
             </div>
           </div>
