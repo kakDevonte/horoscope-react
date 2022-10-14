@@ -21,23 +21,30 @@ const MAX_DAY = 5;
 
 export const HomePage = () => {
   const { scene, user } = useHoroscopeState();
-  const { setScene } = useHoroscopeActions();
-  const [isFullPredict, setIsFullPredict] = React.useState(false);
+  const { setScene, setFullPredict } = useHoroscopeActions();
   const [isShowInfo, seIsShowInfo] = React.useState(false);
   const [height, setHeight] = React.useState(0);
   const navigate = useNavigate();
 
   React.useEffect(() => {
+    let btnHeight = 0;
     const parentPos = document
       .getElementById("predict")
       .getBoundingClientRect();
     const h2 = document.getElementById("btn2").getBoundingClientRect();
     const parentPos2 = document.getElementById("btn").getBoundingClientRect();
-    setHeight(parentPos2.y - parentPos.y - (h2.y - parentPos2.y) / 2);
+
+    if (user.isFullPredict) btnHeight += h2.height * 2;
+
+    console.log(h2);
+    console.log(btnHeight);
+    setHeight(
+      parentPos2.y - parentPos.y - (h2.y - parentPos2.y) / 2 - btnHeight
+    );
   }, []);
 
   const onClickGetFullPredict = () => {
-    setIsFullPredict(true);
+    setFullPredict(user.stars);
   };
 
   const onClickWeekBtn = (scene) => {
@@ -72,12 +79,12 @@ export const HomePage = () => {
             что это?
           </span>
           <span className={styles.sign} onClick={() => navigate("/")}>
-            Выбрать знак
+            Сменить знак
           </span>
         </div>
         <div className={styles.main}>
           <div className={styles.container}>
-            <MainSign />
+            <MainSign index={user.sign} />
             <div className={styles.weekBtns}>
               <button
                 className={`${styles.button} ${
@@ -107,12 +114,15 @@ export const HomePage = () => {
           </div>
           <div className={styles.predictContainer}>
             <div id="predict" className={styles.predict}>
-              <Prediction isFull={isFullPredict} maxHeight={height} />
+              <Prediction isFull={user.isFullPredict} maxHeight={height} />
             </div>
             <div id="btn" className={styles.predictBtns}>
               <button
-                className={styles.button}
-                style={{ display: isFullPredict ? "none" : "block" }}
+                className={`${styles.button} ${
+                  user.stars >= 2 && styles.selected
+                }`}
+                style={{ display: user.isFullPredict ? "none" : "block" }}
+                disabled={user.stars < 2}
                 onClick={onClickGetFullPredict}
               >
                 Показать полностью

@@ -6,7 +6,6 @@ import "./index.scss";
 import { BrowserRouter } from "react-router-dom";
 import { HoroscopeContextProvider } from "./context/horoscope-context";
 
-// Init VK  Mini App
 bridge.send("VKWebAppInit");
 
 ReactDOM.render(

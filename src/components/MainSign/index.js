@@ -24,6 +24,7 @@ import subSagittarius from "../../assets/images/icons/sagittarius.png";
 import subScorpio from "../../assets/images/icons/scorpio.png";
 import subTaurus from "../../assets/images/icons/taurus.png";
 import subVirgo from "../../assets/images/icons/virgo.png";
+import { useHoroscopeState } from "../../context/horoscope-context";
 
 const signs = [
   { name: "Овен", image: aries, subImage: subAries },
@@ -40,12 +41,12 @@ const signs = [
   { name: "Рыбы", image: pisces, subImage: subPisces },
 ];
 
-export const MainSign = () => {
+export const MainSign = ({ index }) => {
   return (
     <div className={styles.root}>
-      <img className={styles.mainSign} src={signs[0].image} />
-      <img className={styles.subSign} src={signs[0].subImage} />
-      <span className={styles.name}>{signs[0].name}</span>
+      <img className={styles.mainSign} src={signs[index].image} />
+      <img className={styles.subSign} src={signs[index].subImage} />
+      <span className={styles.name}>{signs[index].name}</span>
     </div>
   );
 };

@@ -1,11 +1,14 @@
 import React from "react";
+import { horoscopeAPI } from "../api/horoscope-api";
 
 const SET_USER = "SET_USER";
 const SET_SCENE = "SET_SCENE";
+const SET_IS_AUTH = "SET_IS_AUTH";
 
 const initialState = {
   user: { day: 3 },
   scene: "today", //'today tomorrow week'
+  isAuth: false,
 };
 const HoroscopeContext = React.createContext();
 
@@ -14,10 +17,10 @@ export const HoroscopeContextProvider = (props) => {
 
   const actions = {
     getUser: async (id) => {
-      let currUser = { id, balance: 1000 };
+      const data = await horoscopeAPI.getData(id);
       dispatch({
         type: SET_USER,
-        payload: currUser,
+        payload: data.data,
       });
     },
     setScene: (scene) => {
@@ -25,6 +28,51 @@ export const HoroscopeContextProvider = (props) => {
         type: SET_SCENE,
         payload: scene,
       });
+    },
+    setIsAuth: (state) => {
+      dispatch({
+        type: SET_IS_AUTH,
+        payload: state,
+      });
+    },
+    setSign: async (sign) => {
+      const data = await horoscopeAPI.setSign(state.user.id, sign);
+      dispatch({
+        type: SET_USER,
+        payload: data.data,
+      });
+    },
+    setDays: async (day, starts) => {
+      const data = await horoscopeAPI.setDays(state.user.id, day, starts);
+      console.log(data.data);
+      dispatch({
+        type: SET_USER,
+        payload: data.data,
+      });
+    },
+    setFullPredict: async (stars) => {
+      const data = await horoscopeAPI.setFullPredict(state.user.id, stars);
+      dispatch({
+        type: SET_USER,
+        payload: data.data,
+      });
+    },
+    setDateOfGetStars: async (date) => {
+      const data = await horoscopeAPI.setDateOfGetStars(state.user.id, date);
+      dispatch({
+        type: SET_USER,
+        payload: data.data,
+      });
+    },
+    setAdsData: async (date, count) => {
+      const data = await horoscopeAPI.setAdsData(date, count);
+      dispatch({
+        type: SET_USER,
+        payload: data.data,
+      });
+    },
+    addPushNotice: async () => {
+      await horoscopeAPI.addPushNotice(state.user.id);
     },
   };
 
@@ -42,6 +90,9 @@ const reducer = (state, action) => {
     }
     case SET_SCENE: {
       return { ...state, scene: action.payload };
+    }
+    case SET_IS_AUTH: {
+      return { ...state, isAuth: action.payload };
     }
   }
 };

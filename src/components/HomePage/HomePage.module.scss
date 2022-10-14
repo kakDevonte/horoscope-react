@@ -103,8 +103,12 @@
     display: block;
     border: none;
 
-    &:active {
+    &:enabled:active {
       scale: 0.8;
+    }
+
+    &:enabled:hover {
+      cursor: pointer;
     }
 
     &.selected {

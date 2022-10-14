@@ -15,6 +15,10 @@ import taurus from "../../assets/images/icons/taurus.png";
 import virgo from "../../assets/images/icons/virgo.png";
 import { Button } from "../Button";
 import { useNavigate } from "react-router-dom";
+import {
+  useHoroscopeActions,
+  useHoroscopeState,
+} from "../../context/horoscope-context";
 
 const signs = [
   { name: "Овен", image: aries },
@@ -30,29 +34,37 @@ const signs = [
   { name: "Водолец", image: aquarius },
   { name: "Рыбы", image: pisces },
 ];
+
 export const ChoiceSign = () => {
+  const { setSign, setDays } = useHoroscopeActions();
+  const { user } = useHoroscopeState();
   const [isActive, setIsActive] = React.useState(true);
   const [signName, setSignName] = React.useState("");
   const navigate = useNavigate();
 
-  const onClickSign = (name) => {
+  const onClickSign = async (id, name) => {
     setIsActive(false);
     setSignName(name);
+    setSign(id);
   };
 
   const onClickNext = () => {
     navigate("/home");
+
+    if (!user.isGetTodayDay) {
+      setDays(user.day + 1, user.stars);
+    }
   };
 
   return (
     <div className={styles.root}>
       <div className={styles.list}>
-        {signs.map((sign) => (
+        {signs.map((sign, index) => (
           <Sign
             key={sign.name}
             name={sign.name}
             image={sign.image}
-            onClick={() => onClickSign(sign.name)}
+            onClick={() => onClickSign(index, sign.name)}
             isActive={signName === sign.name}
           />
         ))}
