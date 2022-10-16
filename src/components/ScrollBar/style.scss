@@ -1,0 +1,46 @@
+.custom-scrollbars__container {
+    display: grid;
+    height: 100%;
+    grid-template: auto / 1fr 10px;
+    overflow: hidden;
+    position: relative;
+}
+
+.custom-scrollbars__content {
+    -ms-overflow-style: none;
+    overflow: auto;
+    scrollbar-width: none;
+}
+
+.custom-scrollbars__content::-webkit-scrollbar {
+    display: none;
+}
+
+.custom-scrollbars__scrollbar {
+    display: grid;
+    grid-template:  auto / 1fr;
+    place-items: center;
+}
+
+.custom-scrollbars__track-and-thumb {
+    display: block;
+    height: 100%;
+    position: relative;
+}
+
+.custom-scrollbars__track {
+    background-color: rgba(9, 15, 62, 1);
+    border-radius: 10px;
+    bottom: 0;
+    cursor: pointer;
+    position: absolute;
+    top: 0;
+    width: 5px;
+}
+
+.custom-scrollbars__thumb {
+    border-radius: 10px;
+    background-color: rgba(2, 85, 214, 1);
+    position: absolute;
+    width: 5px;
+}

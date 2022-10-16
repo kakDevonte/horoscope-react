@@ -1,3 +1,72 @@
+import clear from "../assets/images/moon/clear.png";
+import stage1 from "../assets/images/moon/stage-1.png";
+import stage2 from "../assets/images/moon/stage-2.png";
+import stage3 from "../assets/images/moon/stage-3.png";
+import stage4 from "../assets/images/moon/stage-4.png";
+import stage5 from "../assets/images/moon/stage-5.png";
+import star from "../assets/images/star.png";
+import aquarius from "../assets/images/sign/aquarius.png";
+import aries from "../assets/images/sign/aries.png";
+import cancer from "../assets/images/sign/cancer.png";
+import capricorn from "../assets/images/sign/capricorn.png";
+import gemini from "../assets/images/sign/gemini.png";
+import leo from "../assets/images/sign/leo.png";
+import libra from "../assets/images/sign/libra.png";
+import pisces from "../assets/images/sign/pisces.png";
+import sagittarius from "../assets/images/sign/sagittarius.png";
+import scorpio from "../assets/images/sign/scorpio.png";
+import taurus from "../assets/images/sign/taurus.png";
+import virgo from "../assets/images/sign/virgo.png";
+import subAquarius from "../assets/images/icons/aquarius.png";
+import subAries from "../assets/images/icons/aries.png";
+import subCancer from "../assets/images/icons/cancer.png";
+import subCapricorn from "../assets/images/icons/capricorn.png";
+import subGemini from "../assets/images/icons/gemini.png";
+import subLeo from "../assets/images/icons/leo.png";
+import subLibra from "../assets/images/icons/libra.png";
+import subPisces from "../assets/images/icons/pisces.png";
+import subSagittarius from "../assets/images/icons/sagittarius.png";
+import subScorpio from "../assets/images/icons/scorpio.png";
+import subTaurus from "../assets/images/icons/taurus.png";
+import subVirgo from "../assets/images/icons/virgo.png";
+import scroll from "../assets/images/scroll.png";
+import logo from "../assets/images/logo.png";
+export const images = [
+  logo,
+  scroll,
+  clear,
+  stage1,
+  stage2,
+  stage3,
+  stage4,
+  stage5,
+  star,
+  aquarius,
+  aries,
+  cancer,
+  capricorn,
+  gemini,
+  leo,
+  libra,
+  pisces,
+  sagittarius,
+  scorpio,
+  taurus,
+  virgo,
+  subAquarius,
+  subAries,
+  subCancer,
+  subCapricorn,
+  subGemini,
+  subLibra,
+  subLeo,
+  subPisces,
+  subScorpio,
+  subSagittarius,
+  subTaurus,
+  subVirgo,
+];
+
 export const interval = (date1, date2) => {
   if (date1 > date2) {
     // swap

@@ -1,6 +1,7 @@
 import React from "react";
 import scroll from "../../assets/images/scroll.png";
 import styles from "./Prediction.module.scss";
+import Scrollbar from "../ScrollBar";
 
 const text =
   "Это фиксированный знак стихии воды. Стрелец обладает природным магнетизмом и сильным характером. Скорпион умеет" +
@@ -23,7 +24,9 @@ export const Prediction = ({ isFull, maxHeight }) => {
     <div className={styles.root}>
       <img className={styles.scrollTop} src={scroll} />
       <div className={styles.content} style={{ maxHeight: maxHeight }}>
-        <p>{predict}</p>
+        <Scrollbar>
+          <p>{predict}</p>
+        </Scrollbar>
       </div>
       <img className={styles.scrollBottom} src={scroll} />
     </div>

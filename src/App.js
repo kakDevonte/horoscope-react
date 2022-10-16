@@ -10,20 +10,28 @@ import {
 } from "./context/horoscope-context";
 import { Loader } from "./components/Loader";
 import "./App.scss";
+import { images } from "./utils";
 
 const App = () => {
   const { getUser, setIsAuth } = useHoroscopeActions();
   const { isAuth } = useHoroscopeState();
+  const [isLoad, setIsLoad] = React.useState(false);
 
+  React.useEffect(() => {
+    images.forEach((picture) => {
+      const img = new Image();
+      img.src = picture;
+    });
+    setIsLoad(true);
+  }, []);
   React.useEffect(() => {
     (async () => {
       const data = await bridge.send("VKWebAppGetUserInfo");
       getUser(data.id);
-      setIsAuth(true);
     })();
   }, []);
 
-  if (!isAuth)
+  if (!isLoad)
     return (
       <div className="loader">
         <Loader />

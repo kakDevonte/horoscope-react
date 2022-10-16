@@ -17,13 +17,25 @@ import {
   useHoroscopeState,
 } from "../../context/horoscope-context";
 import { interval } from "../../utils";
+import bridge from "@vkontakte/vk-bridge";
+import { horoscopeAPI } from "../../api/horoscope-api";
+import { Timer } from "../Timer";
 
 const moon = [stage1, stage2, stage3, stage4, stage5];
 const MAX_DAY = 5;
 
 export const HomePage = () => {
   const { scene, user } = useHoroscopeState();
-  const { setScene, setFullPredict } = useHoroscopeActions();
+  const { dateOfShowAds } = user;
+  const {
+    setScene,
+    setFullPredict,
+    setAdsData,
+    setDays,
+    setStars,
+    setDateOfGetStars,
+    setUser,
+  } = useHoroscopeActions();
   const [isShowInfo, seIsShowInfo] = React.useState(false);
   const [isAd, setIsAd] = React.useState(false);
   const [isTakeBonus, setIsTakeBonus] = React.useState(false);
@@ -31,29 +43,25 @@ export const HomePage = () => {
   const navigate = useNavigate();
 
   React.useEffect(() => {
-    let btnHeight = 0;
-    const parentPos = document
-      .getElementById("predict")
-      .getBoundingClientRect();
-    const h2 = document.getElementById("btn2").getBoundingClientRect();
-    const parentPos2 = document.getElementById("btn").getBoundingClientRect();
+    (async () => await isShowAd())();
+  });
 
-    if (user.isFullPredict) btnHeight += h2.height * 2;
+  React.useEffect(() => {
+    try {
+      let btnHeight = 0;
+      const parentPos = document
+        .getElementById("predict")
+        .getBoundingClientRect();
+      const h2 = document.getElementById("btn2").getBoundingClientRect();
+      const parentPos2 = document.getElementById("btn").getBoundingClientRect();
 
-    console.log(h2);
-    console.log(btnHeight);
-    setHeight(
-      parentPos2.y - parentPos.y - (h2.y - parentPos2.y) / 2 - btnHeight
-    );
-  }, []);
+      if (user.isFullPredict) btnHeight += h2.height * 2;
 
-  const onClickGetFullPredict = () => {
-    setFullPredict(user.stars);
-  };
-
-  const onClickWeekBtn = (scene) => {
-    setScene(scene);
-  };
+      setHeight(
+        parentPos2.y - parentPos.y - (h2.y - parentPos2.y) / 2 - btnHeight
+      );
+    } catch (e) {}
+  });
 
   const getMoon = () => {
     let content = [];
@@ -70,41 +78,77 @@ export const HomePage = () => {
     return content;
   };
 
+  const isShowAd = async () => {
+    const data = await bridge.send("VKWebAppCheckNativeAds", {
+      ad_format: "interstitial",
+    });
+    isAds(data.result);
+  };
+
+  const isAds = (result) => {
+    if (result) {
+      if (user.countOfAdsPerDay >= 3) setIsAd(false);
+      if (user.dateOfShowAds) {
+        let date1 = new Date(user.dateOfShowAds);
+        let date2 = new Date();
+
+        const diff = interval(date1, date2);
+        setIsAd(
+          diff.hours >= 6 ||
+            diff.days >= 1 ||
+            diff.months >= 1 ||
+            diff.years >= 1
+        );
+      } else setIsAd(true);
+    }
+    if (user.dateOfGetStars) {
+      let date1 = new Date(user.dateOfGetStars);
+      let date2 = new Date();
+      const diff = interval(date1, date2);
+      if (
+        diff.hours >= 21 ||
+        diff.days >= 1 ||
+        diff.months >= 1 ||
+        diff.years >= 1
+      ) {
+        setIsTakeBonus(true);
+      }
+    } else {
+      setIsTakeBonus(true);
+    }
+  };
+
+  const onClickGetFullPredict = () => {
+    setFullPredict(user.stars);
+  };
+
+  const onClickWeekBtn = (scene) => {
+    setScene(scene);
+  };
+
   const onClickShowInfo = () => {
     seIsShowInfo(!isShowInfo);
   };
 
-  const isAds = () => {
-    if (isAd) {
-      if (this.state.countOfAdsPerDay >= 3) setIsAd(false)ds.isAds = false;
-      if (this.state.dateOfShowAds) {
-        let date1 = new Date(this.state.dateOfShowAds);
-        let date2 = new Date();
-        const diff = interval(date1, date2);
-        ads.isAds =
-          diff.hours >= 6 ||
-          diff.days >= 1 ||
-          diff.months >= 1 ||
-          diff.years >= 1;
-      } else ads.isAds = true;
-    } else {
-      if (this.state.dateOfGetStars) {
-        let date1 = new Date(this.state.dateOfGetStars);
-        let date2 = new Date();
+  const onClickCreateHistory = () => {};
 
-        const diff = interval(date1, date2);
-        if (
-          diff.hours >= 21 ||
-          diff.days >= 1 ||
-          diff.months >= 1 ||
-          diff.years >= 1
-        ) {
-          ads.isTakeBonus = true;
-        }
-      } else {
-        ads.isTakeBonus = true;
-      }
+  const onClickShowAd = async () => {
+    if (isAd) {
+      const data = await horoscopeAPI.setAdsData(
+        user.id,
+        new Date(),
+        user.countOfAdsPerDay + 1
+      );
+      setUser(data.data);
+      // await setAdsData(new Date(), user.countOfAdsPerDay + 1);
+      bridge.send("VKWebAppShowNativeAds", {
+        ad_format: "interstitial",
+      });
+    } else if (isTakeBonus) {
+      setDateOfGetStars(new Date());
     }
+    await setDays(user.day + 1, user.stars);
+    await setStars(user.stars + 2);
   };
 
   return (
@@ -150,30 +194,49 @@ export const HomePage = () => {
               </button>
             </div>
           </div>
-          <div className={styles.predictContainer}>
-            <div id="predict" className={styles.predict}>
-              <Prediction isFull={user.isFullPredict} maxHeight={height} />
+          {scene === "today" && (
+            <div className={styles.predictContainer}>
+              <div id="predict" className={styles.predict}>
+                <Prediction isFull={user.isFullPredict} maxHeight={height} />
+              </div>
+              <div id="btn" className={styles.predictBtns}>
+                <button
+                  className={`${styles.button} ${
+                    user.stars >= 2 && styles.selected
+                  }`}
+                  style={{ display: user.isFullPredict ? "none" : "block" }}
+                  disabled={user.stars < 2}
+                  onClick={onClickGetFullPredict}
+                >
+                  Показать полностью
+                </button>
+                <button
+                  id="btn2"
+                  className={`${styles.button} ${
+                    (isAd || isTakeBonus) && styles.selected
+                  }`}
+                  disabled={!(isAd || isTakeBonus)}
+                  onClick={onClickShowAd}
+                >
+                  <span className={styles.adBtnText}>
+                    {isAd ? "Посмотреть рекламу" : "Получить"} +2
+                    <img src={stage1} />
+                    +1 <img src={star} />
+                  </span>
+                </button>
+              </div>
             </div>
-            <div id="btn" className={styles.predictBtns}>
-              <button
-                className={`${styles.button} ${
-                  user.stars >= 2 && styles.selected
-                }`}
-                style={{ display: user.isFullPredict ? "none" : "block" }}
-                disabled={user.stars < 2}
-                onClick={onClickGetFullPredict}
-              >
-                Показать полностью
-              </button>
-              <button id="btn2" className={styles.button}>
-                <span className={styles.adBtnText}>
-                  Посмотреть рекламу +2
-                  <img src={stage1} />
-                  +1 <img src={star} />
-                </span>
-              </button>
+          )}
+          {scene === "tomorrow" && (
+            <div className={styles.tomorrowContainer}>
+              <span>
+                Гороскоп на завтра будет <br /> доступен в{" "}
+                <span className={styles.gradient}>21.00 по МСК</span>
+              </span>
+              <Timer />
+              <RepostButton title={"Напомните мне"} />
             </div>
-          </div>
+          )}
         </div>
         <div className={styles.repost}>
           <span>Поделиться гороскопом</span>

@@ -16,12 +16,29 @@ export const HoroscopeContextProvider = (props) => {
   const [state, dispatch] = React.useReducer(reducer, initialState);
 
   const actions = {
-    getUser: async (id) => {
-      const data = await horoscopeAPI.getData(id);
+    setUser: async (user) => {
       dispatch({
         type: SET_USER,
-        payload: data.data,
+        payload: user,
       });
+    },
+    getUser: async (id) => {
+      try {
+        const data = await horoscopeAPI.getData(id);
+        dispatch({
+          type: SET_USER,
+          payload: data.data,
+        });
+        dispatch({
+          type: SET_IS_AUTH,
+          payload: true,
+        });
+      } catch (e) {
+        dispatch({
+          type: SET_IS_AUTH,
+          payload: false,
+        });
+      }
     },
     setScene: (scene) => {
       dispatch({
@@ -42,9 +59,15 @@ export const HoroscopeContextProvider = (props) => {
         payload: data.data,
       });
     },
-    setDays: async (day, starts) => {
-      const data = await horoscopeAPI.setDays(state.user.id, day, starts);
-      console.log(data.data);
+    setDays: async (day, stars) => {
+      const data = await horoscopeAPI.setDays(state.user.id, day, stars);
+      dispatch({
+        type: SET_USER,
+        payload: data.data,
+      });
+    },
+    setStars: async (stars) => {
+      const data = await horoscopeAPI.setStars(state.user.id, stars);
       dispatch({
         type: SET_USER,
         payload: data.data,
@@ -65,7 +88,7 @@ export const HoroscopeContextProvider = (props) => {
       });
     },
     setAdsData: async (date, count) => {
-      const data = await horoscopeAPI.setAdsData(date, count);
+      const data = await horoscopeAPI.setAdsData(state.user.id, date, count);
       dispatch({
         type: SET_USER,
         payload: data.data,
