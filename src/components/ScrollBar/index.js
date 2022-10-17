@@ -7,14 +7,23 @@ const Scrollbar = ({ children, className, ...props }) => {
   const scrollThumbRef = useRef(null);
   const observer = useRef(null);
   const [thumbHeight, setThumbHeight] = useState(20);
-  const [isVisible, setIsVisible] = useState(false);
+  const [isVisible, setIsVisible] = useState(true);
   const [scrollStartPosition, setScrollStartPosition] = useState(null);
   const [initialScrollTop, setInitialScrollTop] = useState(0);
   const [isDragging, setIsDragging] = useState(false);
 
   function handleResize(ref, trackSize) {
     const { clientHeight, scrollHeight } = ref;
-    const thumbHeight = Math.max((clientHeight / scrollHeight) * trackSize, 20);
+
+    if (clientHeight >= scrollHeight) {
+      setIsVisible(false);
+    } else {
+      setIsVisible(true);
+    }
+    const thumbHeight = Math.max(
+      (clientHeight / scrollHeight) * clientHeight,
+      20
+    );
     setThumbHeight(thumbHeight);
   }
 
@@ -109,17 +118,6 @@ const Scrollbar = ({ children, className, ...props }) => {
       const ref = contentRef.current;
       const { clientHeight: trackSize } = scrollTrackRef.current;
       const { clientHeight, scrollHeight } = ref;
-
-      const thumbHeight = Math.max(
-        (clientHeight / scrollHeight) * trackSize,
-        20
-      );
-
-      if (clientHeight >= scrollHeight) {
-        setIsVisible(false);
-      } else {
-        setIsVisible(true);
-      }
 
       observer.current = new ResizeObserver(() => {
         handleResize(ref, trackSize);

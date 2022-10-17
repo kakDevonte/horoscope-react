@@ -23,13 +23,7 @@ const secondsToHms = (d) => {
 const secondsInDate = () => {
   let now = new Date();
   let date = new Date(
-    now.getFullYear(),
-    now.getMonth(),
-    now.getDate(),
-    25,
-    0,
-    0,
-    0
+    Date.UTC(now.getFullYear(), now.getMonth(), now.getDate(), 18, 0, 0)
   );
   const diff = date - new Date();
   return diff / 1000;

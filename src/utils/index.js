@@ -99,3 +99,50 @@ export const interval = (date1, date2) => {
   }
   return result;
 };
+
+export const loadImage = (image, cors = true) => {
+  return new Promise((resolve) => {
+    if (!image) return resolve(null);
+
+    const img = new Image();
+
+    img.crossOrigin = cors ? "use-credentials" : "anonymous";
+    img.onload = () => resolve(img);
+    img.onerror = () => resolve(null);
+    img.src = image;
+  });
+};
+
+export const regularText = (text) => {
+  const count = text.split(" ").length;
+  if (count < 44) return text;
+  const REGEX = /((\s*\S+){44})([\s\S]*)/;
+  return text ? REGEX.exec(text)[1] + "..." : "";
+};
+
+export const split = (text, limit) => {
+  let i, length;
+  let line, counter, word;
+  let result = [""];
+
+  text = text.split(" ");
+  line = 0;
+  counter = 0;
+
+  for (i = 0, length = text.length; i < length; i++) {
+    word = text[i];
+
+    counter += word.length;
+
+    if (counter > limit) {
+      line++;
+      counter = 0;
+      result[line] = "";
+    }
+
+    result[line] += word + " ";
+    counter++;
+  }
+
+  return result;
+};

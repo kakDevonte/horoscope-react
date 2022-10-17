@@ -37,6 +37,8 @@
 }
 
 .predict {
+  position: relative;
+  width: 100%;
   //align-self: center;
 }
 
@@ -138,6 +140,7 @@
   align-items: center;
   justify-content: center;
   img {
+    margin-right: 5px;
     margin-left: 5px;
     width: 1.2em;
   }

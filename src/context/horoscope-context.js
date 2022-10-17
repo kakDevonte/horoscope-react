@@ -4,11 +4,43 @@ import { horoscopeAPI } from "../api/horoscope-api";
 const SET_USER = "SET_USER";
 const SET_SCENE = "SET_SCENE";
 const SET_IS_AUTH = "SET_IS_AUTH";
+const SET_PREDICT = "SET_PREDICT";
+
+let horoscopeIsNotMade = "Астролог уже составляет ваш гороскоп, зайдите позже.";
+
+const predict = {
+  aries: horoscopeIsNotMade,
+  taurus: horoscopeIsNotMade,
+  gemini: horoscopeIsNotMade,
+  cancer: horoscopeIsNotMade,
+  leo: horoscopeIsNotMade,
+  virgo: horoscopeIsNotMade,
+  libra: horoscopeIsNotMade,
+  scorpio: horoscopeIsNotMade,
+  sagittarius: horoscopeIsNotMade,
+  capricorn: horoscopeIsNotMade,
+  aquarius: horoscopeIsNotMade,
+  pisces: horoscopeIsNotMade,
+  ophiuchus: horoscopeIsNotMade,
+};
 
 const initialState = {
-  user: { day: 3 },
+  user: {
+    id: 1,
+    stars: 0,
+    days: 0,
+    newcomer: true,
+    sign: 0,
+    isGetTodayDay: "",
+    isFullPredict: false,
+    dateOfGetStars: "",
+    countOfAdsPerDay: 0,
+    dateOfShowAds: "",
+  },
   scene: "today", //'today tomorrow week'
   isAuth: false,
+  today: predict,
+  tomorrow: predict,
 };
 const HoroscopeContext = React.createContext();
 
@@ -16,17 +48,15 @@ export const HoroscopeContextProvider = (props) => {
   const [state, dispatch] = React.useReducer(reducer, initialState);
 
   const actions = {
-    setUser: async (user) => {
-      dispatch({
-        type: SET_USER,
-        payload: user,
-      });
-    },
     getUser: async (id) => {
       try {
         const data = await horoscopeAPI.getData(id);
         dispatch({
           type: SET_USER,
+          payload: data.data,
+        });
+        dispatch({
+          type: SET_PREDICT,
           payload: data.data,
         });
         dispatch({
@@ -116,6 +146,13 @@ const reducer = (state, action) => {
     }
     case SET_IS_AUTH: {
       return { ...state, isAuth: action.payload };
+    }
+    case SET_PREDICT: {
+      return {
+        ...state,
+        today: action.payload.today,
+        tomorrow: action.payload.tomorrow,
+      };
     }
   }
 };
