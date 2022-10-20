@@ -31,7 +31,7 @@ const signs = [
   { name: "Скорпион", image: scorpio },
   { name: "Стрелец", image: sagittarius },
   { name: "Козерог", image: capricorn },
-  { name: "Водолец", image: aquarius },
+  { name: "Водолей", image: aquarius },
   { name: "Рыбы", image: pisces },
 ];
 
