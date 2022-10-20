@@ -20,6 +20,7 @@
     "axios": "^1.1.2",
     "babel-eslint": "^10.1.0",
     "canvas": "^2.10.1",
+    "crypto": "^1.0.1",
     "eruda": "^2.4.1",
     "eruda-code": "^2.0.0",
     "eruda-dom": "^2.0.0",

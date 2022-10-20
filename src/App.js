@@ -24,6 +24,7 @@ const App = () => {
     });
     setIsLoad(true);
   }, []);
+
   React.useEffect(() => {
     (async () => {
       const data = await bridge.send("VKWebAppGetUserInfo");

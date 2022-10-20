@@ -32,7 +32,7 @@ const initialState = {
     newcomer: true,
     sign: 0,
     isGetTodayDay: "",
-    isFullPredict: false,
+    isFullPredict: true,
     dateOfGetStars: "",
     countOfAdsPerDay: 0,
     dateOfShowAds: "",
@@ -83,49 +83,63 @@ export const HoroscopeContextProvider = (props) => {
       });
     },
     setSign: async (sign) => {
-      const data = await horoscopeAPI.setSign(state.user.id, sign);
-      dispatch({
-        type: SET_USER,
-        payload: data.data,
-      });
+      try {
+        const data = await horoscopeAPI.setSign(state.user.id, sign);
+        dispatch({
+          type: SET_USER,
+          payload: data.data,
+        });
+      } catch (e) {}
     },
     setDays: async (day, stars) => {
-      const data = await horoscopeAPI.setDays(state.user.id, day, stars);
-      dispatch({
-        type: SET_USER,
-        payload: data.data,
-      });
+      try {
+        const data = await horoscopeAPI.setDays(state.user.id, day, stars);
+        dispatch({
+          type: SET_USER,
+          payload: data.data,
+        });
+      } catch (e) {}
     },
     setStars: async (stars) => {
-      const data = await horoscopeAPI.setStars(state.user.id, stars);
-      dispatch({
-        type: SET_USER,
-        payload: data.data,
-      });
+      try {
+        const data = await horoscopeAPI.setStars(state.user.id, stars);
+        dispatch({
+          type: SET_USER,
+          payload: data.data,
+        });
+      } catch (e) {}
     },
     setFullPredict: async (stars) => {
-      const data = await horoscopeAPI.setFullPredict(state.user.id, stars);
-      dispatch({
-        type: SET_USER,
-        payload: data.data,
-      });
+      try {
+        const data = await horoscopeAPI.setFullPredict(state.user.id, stars);
+        dispatch({
+          type: SET_USER,
+          payload: data.data,
+        });
+      } catch (e) {}
     },
     setDateOfGetStars: async (date) => {
-      const data = await horoscopeAPI.setDateOfGetStars(state.user.id, date);
-      dispatch({
-        type: SET_USER,
-        payload: data.data,
-      });
+      try {
+        const data = await horoscopeAPI.setDateOfGetStars(state.user.id, date);
+        dispatch({
+          type: SET_USER,
+          payload: data.data,
+        });
+      } catch (e) {}
     },
     setAdsData: async (date, count) => {
-      const data = await horoscopeAPI.setAdsData(state.user.id, date, count);
-      dispatch({
-        type: SET_USER,
-        payload: data.data,
-      });
+      try {
+        const data = await horoscopeAPI.setAdsData(state.user.id, date, count);
+        dispatch({
+          type: SET_USER,
+          payload: data.data,
+        });
+      } catch (e) {}
     },
     addPushNotice: async () => {
-      await horoscopeAPI.addPushNotice(state.user.id);
+      try {
+        await horoscopeAPI.addPushNotice(state.user.id);
+      } catch (e) {}
     },
   };
 
