@@ -40,15 +40,17 @@ export const ChoiceSign = () => {
   const { user } = useHoroscopeState();
   const [isActive, setIsActive] = React.useState(true);
   const [signName, setSignName] = React.useState("");
+  const [signId, setSignId] = React.useState(null);
   const navigate = useNavigate();
 
   const onClickSign = async (id, name) => {
     setIsActive(false);
     setSignName(name);
-    setSign(id);
+    setSignId(id);
   };
 
   const onClickNext = () => {
+    setSign(signId);
     navigate("/home");
 
     if (!user.isGetTodayDay) {

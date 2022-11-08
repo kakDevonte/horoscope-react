@@ -19,7 +19,6 @@ import {
 } from "../../context/horoscope-context";
 import { interval, loadImage, regularText, split } from "../../utils";
 import bridge from "@vkontakte/vk-bridge";
-import { horoscopeAPI } from "../../api/horoscope-api";
 import { Timer } from "../Timer";
 import * as qs from "qs";
 import { WeekPredict } from "../WeekPredict";
@@ -169,18 +168,7 @@ export const HomePage = () => {
 
     ctx.font = `${Math.floor(fontSize)}px Nasalization`;
     ctx.textAlign = "center";
-    ctx.fillStyle = "white";
-    // this.state.today[this.state.sign]
-
-    const text =
-      "Стоит быть внимательнее, " +
-      "особенно в первой половине дня." +
-      " В это время легко допустить ошибки в делах," +
-      " упустить из виду что-то важное." +
-      " Лучше не торопиться с решениями," +
-      " касающимися финансов и имущества, не " +
-      " касающимися финансов и имущества, не " +
-      "подписывать документы, прежде чем вы тщательно изучите их"; //44
+    ctx.fillStyle = "white"; //44
 
     const data = split(regularText(textPredict), 28);
     const offset = data.length * fontSize - fontSize * 1.5;
@@ -255,7 +243,7 @@ export const HomePage = () => {
 
     blobBtn = canvas.toDataURL();
 
-    bridge.send("VKWebAppShowStoryBox", {
+    await bridge.send("VKWebAppShowStoryBox", {
       background_type: "image",
       blob: backgroundBlob,
       stickers: [
@@ -296,8 +284,8 @@ export const HomePage = () => {
     });
   };
 
-  const onClickWall = () => {
-    bridge.send("VKWebAppShowWallPostBox", {
+  const onClickWall = async () => {
+    await bridge.send("VKWebAppShowWallPostBox", {
       message:
         textPredict +
         " \nУзнай, что звезды говорят тебе  https://vk.com/app51442719",
@@ -305,35 +293,9 @@ export const HomePage = () => {
   };
 
   const onClickMessage = async () => {
-    let userId;
-    let token;
-    const friends = await bridge.send("VKWebAppGetFriends", {});
-    userId = friends.users[0].id;
-
-    const data = await bridge.send("VKWebAppGetAuthToken", {
-      app_id: 51442719,
-      scope: "friends,status,messages",
-    });
-    token = data.access_token;
-    await bridge
-      .send("VKWebAppCallAPIMethod", {
-        method: "messages.send",
-        params: {
-          peer_id: userId,
-          v: "5.131",
-          message:
-            textPredict +
-            "\nУзнай, что звезды говорят тебе https://vk.com/app51442719",
-          access_token: token,
-        },
-      })
-      .then((data) => {
-        // console.log(data);
-      })
-      .catch((error) => {
-        // console.log(error);
-      });
+    await bridge.send("VKWebAppShare");
   };
+
   const onClickShowAd = async () => {
     if (isAd) {
       await setAdsData(new Date(), user.countOfAdsPerDay + 1);
@@ -459,7 +421,7 @@ export const HomePage = () => {
           <div className={styles.repostBtns}>
             <RepostButton title={"На стену"} onClick={onClickWall} />
             <RepostButton title={"В историю"} onClick={onClickCreateHistory} />
-            <RepostButton title={"В личку"} onClick={onClickMessage} />
+            {/*<RepostButton title={"В личку"} onClick={onClickMessage} />*/}
           </div>
         </div>
       </div>

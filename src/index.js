@@ -8,6 +8,16 @@ import { HoroscopeContextProvider } from "./context/horoscope-context";
 
 bridge.send("VKWebAppInit");
 
+screen.orientation
+  .lock("portrait-primary")
+  .then(() => {
+    console.log(`Locked to portrait-primary\n`);
+  })
+  .catch((error) => {
+    console.log(error);
+  });
+
+console.log("ЭЕКРАН");
 ReactDOM.render(
   <BrowserRouter>
     <HoroscopeContextProvider>
