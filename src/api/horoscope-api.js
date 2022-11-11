@@ -1,8 +1,8 @@
 import axios from "axios";
 
 const instance = axios.create({
-  //baseURL: "http://localhost:3000/api/",
-  baseURL: "https://297349.simplecloud.ru/api/",
+  baseURL: "http://localhost:3000/api/",
+  //baseURL: "https://297349.simplecloud.ru/api/",
   headers: {
     // Прикрепляем заголовок, отвечающий за параметры запуска.
     Authorization: `${window.location.search.slice(1)}`,

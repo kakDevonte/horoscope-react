@@ -17,7 +17,6 @@ screen.orientation
     console.log(error);
   });
 
-console.log("ЭЕКРАН");
 ReactDOM.render(
   <BrowserRouter>
     <HoroscopeContextProvider>
