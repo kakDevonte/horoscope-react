@@ -4,7 +4,25 @@ body {
   margin: 0;
   padding: 0;
   position: fixed;
+
+  @media (max-height: 650px) {
+    font-size: 13px;
+  }
+  @media (max-height: 600px) {
+    font-size: 12px;
+  }
+  @media (max-height: 550px) {
+    font-size: 11px;
+  }
+  @media (max-height: 500px) {
+    font-size: 10px;
+  }
+  @media (max-width: 350px) {
+    font-size: 11px;
+  }
+
 }
+////cross-env PORT=10888 HTTPS=true
  * {
    box-sizing: border-box;
    user-drag: none;
@@ -13,6 +31,7 @@ body {
    -moz-user-select: none;
    -webkit-user-select: none;
    -ms-user-select: none;
+   -webkit-tap-highlight-color: transparent;
  }
 
 @font-face {

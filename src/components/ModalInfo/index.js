@@ -18,13 +18,13 @@ export const ModalInfo = ({ onClick }) => {
         </span>
         <div className={styles.progress}>
           <img src={stage1} />
-          <span>&#10230;</span>
+          <span>-></span>
           <img src={stage2} />
-          <span>&#10230;</span>
+          <span>-></span>
           <img src={stage3} />
-          <span>&#10230;</span>
+          <span>-></span>
           <img src={stage4} />
-          <span>&#10230;</span>
+          <span>-></span>
           <img src={stage5} />
         </div>
         <div className={styles.container}>
@@ -35,7 +35,7 @@ export const ModalInfo = ({ onClick }) => {
         </div>
         <div className={styles.result}>
           <img src={stage5} />
-          <span>&#10230;</span>
+          <span>-></span>
           <span>+5</span>
           <img src={star} />
         </div>

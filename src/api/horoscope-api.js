@@ -10,32 +10,31 @@ const instance = axios.create({
 });
 
 export const horoscopeAPI = {
-  getData(id) {
-    return instance.post(`getData/`, { id });
+  getData() {
+    return instance.get(`getData/`);
   },
-  setSign(id, sign) {
-    return instance.post(`setSign/`, { id, sign });
+  setSign(sign) {
+    return instance.get(`setSign/${sign}`);
   },
-  setDays(id, day, stars) {
-    return instance.post(`setDays/`, { id, day, stars });
+  setDays() {
+    return instance.get(`setDays/`);
   },
-  setStars(id, stars) {
-    return instance.post(`setStars/`, { id, stars });
+  setStars() {
+    return instance.get(`setStars/`);
   },
-  setFullPredict(id, stars) {
-    return instance.post(`setFullPredict/`, { id, stars });
+  setFullPredict(sign) {
+    return instance.get(`setFullPredict/${sign}`);
   },
-  addPushNotice(id) {
-    return instance.post("addPushNotice/", { id });
+  addPushNotice() {
+    return instance.get("addPushNotice/");
   },
-  setDateOfGetStars(id, dateOfGetStars) {
-    return instance.post("setDateOfGetStars/", { id, dateOfGetStars });
+  setDateOfGetStars() {
+    return instance.get("setDateOfGetStars/");
   },
-  setAdsData(id, dateOfShowAds, countOfAdsPerDay) {
-    return instance.post("setAdsData/", {
-      id,
-      dateOfShowAds,
-      countOfAdsPerDay,
-    });
+  setAdsData() {
+    return instance.get("setAdsData/");
+  },
+  setRemindMe() {
+    return instance.get("remindMe/");
   },
 };

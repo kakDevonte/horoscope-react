@@ -11,6 +11,7 @@ import {
 import { Loader } from "./components/Loader";
 import "./App.scss";
 import { images } from "./utils";
+import ErrorPage from "./components/ErrorPage";
 
 const App = () => {
   const { getUser, setIsAuth } = useHoroscopeActions();
@@ -45,6 +46,7 @@ const App = () => {
       <Routes>
         <Route path={"/"} element={<ChoiceSign />} />
         <Route path={"/home"} element={<HomePage />} />
+        <Route path={"/404"} element={<ErrorPage />} />
       </Routes>
     </div>
   );

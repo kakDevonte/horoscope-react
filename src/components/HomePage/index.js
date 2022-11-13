@@ -21,7 +21,6 @@ import { interval, loadImage, regularText, split } from "../../utils";
 import bridge from "@vkontakte/vk-bridge";
 import { Timer } from "../Timer";
 import * as qs from "qs";
-import { WeekPredict } from "../WeekPredict";
 
 const moon = [stage1, stage2, stage3, stage4, stage5];
 const MAX_DAY = 5;
@@ -43,10 +42,10 @@ export const HomePage = () => {
     setDateOfGetStars,
     addPushNotice,
     setAdsData,
+    setRemindMe,
   } = useHoroscopeActions();
   const [isShowInfo, seIsShowInfo] = React.useState(false);
   const [isAd, setIsAd] = React.useState(false);
-  const [isTakeBonus, setIsTakeBonus] = React.useState(false);
   const [height, setHeight] = React.useState(0);
   const navigate = useNavigate();
   const [textPredict, setTextPredict] = React.useState(
@@ -114,26 +113,12 @@ export const HomePage = () => {
         );
       } else setIsAd(true);
     } else {
-      if (user.dateOfGetStars) {
-        let date1 = new Date(user.dateOfGetStars);
-        let date2 = new Date();
-        const diff = interval(date1, date2);
-        if (
-          diff.hours >= 21 ||
-          diff.days >= 1 ||
-          diff.months >= 1 ||
-          diff.years >= 1
-        ) {
-          setIsTakeBonus(true);
-        }
-      } else {
-        setIsTakeBonus(true);
-      }
+      setIsAd(false);
     }
   };
 
   const onClickGetFullPredict = () => {
-    setFullPredict(user.stars);
+    setFullPredict(user.sign);
     setTextPredict(today[Object.keys(today)[user.sign]]);
   };
 
@@ -243,7 +228,7 @@ export const HomePage = () => {
 
     blobBtn = canvas.toDataURL();
 
-    await bridge.send("VKWebAppShowStoryBox", {
+    bridge.send("VKWebAppShowStoryBox", {
       background_type: "image",
       blob: backgroundBlob,
       stickers: [
@@ -298,27 +283,31 @@ export const HomePage = () => {
 
   const onClickShowAd = async () => {
     if (isAd) {
-      await setAdsData(new Date(), user.countOfAdsPerDay + 1);
+      await setAdsData();
       await bridge.send("VKWebAppShowNativeAds", {
         ad_format: "interstitial",
       });
-    } else if (isTakeBonus) {
-      setDateOfGetStars(new Date());
+      // await setDays();
+      // await setStars();
     }
-    await setDays(user.day + 1, user.stars);
-    await setStars(user.stars + 2);
   };
 
-  const onClickRemindMe = () => {
-    let parsed = qs.parse(window.location.href);
-    if (parseInt(parsed.vk_are_notifications_enabled)) {
+  const onClickRemindMe = async () => {
+    if (user.isClickedOnRemindMe) return;
+    let data = await bridge.send("VKWebAppGetLaunchParams");
+    if (data.vk_are_notifications_enabled) {
       addPushNotice();
+      setRemindMe();
     } else {
       bridge.send("VKWebAppAllowNotifications").then((data) => {
-        if (data.result) addPushNotice();
+        if (data.result) {
+          addPushNotice();
+          setRemindMe();
+        }
       });
     }
   };
+
   return (
     <div className={`${styles.home} ${isShowInfo && styles.bg}`}>
       {isShowInfo && <ModalInfo onClick={onClickShowInfo} />}
@@ -365,14 +354,18 @@ export const HomePage = () => {
           {scene === "today" && (
             <div className={styles.predictContainer}>
               <div id="predict" className={styles.predict}>
-                <Prediction isFull={user.isFullPredict} maxHeight={height} />
+                <Prediction
+                  isFull={user.isFullPredict[user.sign]}
+                  maxHeight={height}
+                />
               </div>
               <div id="btn" className={styles.predictBtns}>
                 <button
-                  className={`${styles.button} ${
-                    user.stars >= 2 && styles.selected
-                  }`}
-                  style={{ display: user.isFullPredict ? "none" : "block" }}
+                  className={`${styles.button} 
+                  ${user.stars >= 2 ? styles.selected : styles.disabled}`}
+                  style={{
+                    display: user.isFullPredict[user.sign] ? "none" : "block",
+                  }}
                   disabled={user.stars < 2}
                   onClick={onClickGetFullPredict}
                 >
@@ -382,17 +375,17 @@ export const HomePage = () => {
                 </button>
                 <button
                   id="btn2"
-                  className={`${styles.button} ${
-                    (isAd || isTakeBonus) && styles.selected
+                  className={`${styles.button}  ${
+                    isAd ? styles.selected : styles.disabled
                   }`}
-                  disabled={!(isAd || isTakeBonus)}
+                  disabled={!isAd}
                   onClick={onClickShowAd}
                 >
                   <span className={styles.adBtnText}>
-                    {isAd ? "Посмотреть рекламу" : "Получить"}
+                    {"Посмотреть рекламу"}
                     {" +2 "}
                     <img src={star} />
-                    {" +1"}
+                    {" +1 "}
                     <img src={stage1} />
                   </span>
                 </button>
@@ -406,13 +399,11 @@ export const HomePage = () => {
                 <span className={styles.gradient}>21.00 по МСК</span>
               </span>
               <Timer />
-              <RepostButton title={"Напомните мне"} onClick={onClickRemindMe} />
-            </div>
-          )}
-          {scene === "week" && (
-            <div className={styles.tomorrowContainer}>
-              <WeekPredict />
-              {/*<span>Гороскоп на неделю на данный момент недоступен :)</span>*/}
+              <RepostButton
+                title={"Напомните мне"}
+                onClick={onClickRemindMe}
+                disabled={user.isClickedOnRemindMe}
+              />
             </div>
           )}
         </div>

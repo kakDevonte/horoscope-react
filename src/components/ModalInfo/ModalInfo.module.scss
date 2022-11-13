@@ -20,7 +20,7 @@
   align-items: center;
   position: relative;
   background: rgba(9, 15, 62, 1);
-  width: 343px;
+  width: 80%;
   height: 303px;
   border-radius: 8px;
   gap: 10px;
@@ -70,13 +70,20 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  text-align: center;
+  vertical-align: middle;
 
   img {
     margin: 5px;
     width: 1.2em;
   }
+
 }
 
 .button {
   width: 60%;
+}
+
+.arrow{
+  font-size: 1em;
 }

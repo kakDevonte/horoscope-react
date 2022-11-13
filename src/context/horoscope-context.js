@@ -84,7 +84,7 @@ export const HoroscopeContextProvider = (props) => {
     },
     setSign: async (sign) => {
       try {
-        const data = await horoscopeAPI.setSign(state.user.id, sign);
+        const data = await horoscopeAPI.setSign(sign);
         dispatch({
           type: SET_USER,
           payload: data.data,
@@ -102,16 +102,16 @@ export const HoroscopeContextProvider = (props) => {
     },
     setStars: async (stars) => {
       try {
-        const data = await horoscopeAPI.setStars(state.user.id, stars);
+        const data = await horoscopeAPI.setStars();
         dispatch({
           type: SET_USER,
           payload: data.data,
         });
       } catch (e) {}
     },
-    setFullPredict: async (stars) => {
+    setFullPredict: async (sign) => {
       try {
-        const data = await horoscopeAPI.setFullPredict(state.user.id, stars);
+        const data = await horoscopeAPI.setFullPredict(sign);
         dispatch({
           type: SET_USER,
           payload: data.data,
@@ -130,6 +130,15 @@ export const HoroscopeContextProvider = (props) => {
     setAdsData: async (date, count) => {
       try {
         const data = await horoscopeAPI.setAdsData(state.user.id, date, count);
+        dispatch({
+          type: SET_USER,
+          payload: data.data,
+        });
+      } catch (e) {}
+    },
+    setRemindMe: async () => {
+      try {
+        const data = await horoscopeAPI.setRemindMe();
         dispatch({
           type: SET_USER,
           payload: data.data,
