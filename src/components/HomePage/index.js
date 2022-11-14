@@ -287,7 +287,6 @@ export const HomePage = () => {
       await bridge.send("VKWebAppShowNativeAds", {
         ad_format: "interstitial",
       });
-      // await setDays();
       // await setStars();
     }
   };

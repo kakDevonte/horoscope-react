@@ -1,5 +1,9 @@
 import React from "react";
 import styles from "./Timer.module.scss";
+import {
+  useHoroscopeActions,
+  useHoroscopeState,
+} from "../../context/horoscope-context";
 
 const addZeros = (num) => {
   if (num < 10) {
@@ -32,9 +36,16 @@ const secondsInDate = () => {
 export const Timer = () => {
   const [seconds, setSeconds] = React.useState(secondsInDate());
   const [text, setText] = React.useState(secondsToHms(seconds));
+  const { getUser } = useHoroscopeActions();
+  const { isAuth, user } = useHoroscopeState();
 
   React.useEffect(() => {
     let myInterval = setInterval(() => {
+      if (seconds <= 0) {
+        setSeconds(secondsInDate());
+        getUser(user.id);
+      }
+
       setSeconds(seconds - 1);
       setText(secondsToHms(seconds - 1));
     }, 1000);
