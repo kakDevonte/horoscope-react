@@ -53,6 +53,17 @@ export const HomePage = () => {
       ? today[Object.keys(today)[user.sign]]
       : regexText(today[Object.keys(today)[user.sign]])
   );
+  const [isOnline, setIsOnline] = React.useState(true);
+  let interval = null;
+
+  const InternetErrMessenger = () => setIsOnline(navigator.onLine === true);
+
+  React.useEffect(() => {
+    interval = setInterval(InternetErrMessenger, 3000);
+    return () => {
+      clearInterval(interval);
+    };
+  }, []);
 
   React.useEffect(() => {
     (async () => await isShowAd())();
@@ -287,13 +298,16 @@ export const HomePage = () => {
       await bridge.send("VKWebAppShowNativeAds", {
         ad_format: "interstitial",
       });
+      setIsAd(!isAd);
       // await setStars();
     }
   };
 
   const onClickRemindMe = async () => {
+    console.log(user.isClickedOnRemindMe);
     if (user.isClickedOnRemindMe) return;
     let data = await bridge.send("VKWebAppGetLaunchParams");
+    console.log(data);
     if (data.vk_are_notifications_enabled) {
       addPushNotice();
       setRemindMe();
@@ -306,6 +320,10 @@ export const HomePage = () => {
       });
     }
   };
+
+  if (isOnline !== true) {
+    navigate("/404");
+  }
 
   return (
     <div className={`${styles.home} ${isShowInfo && styles.bg}`}>

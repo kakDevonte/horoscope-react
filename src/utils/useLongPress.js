@@ -4,7 +4,7 @@ export default function useLongPress(
   // callback that is invoked at the specified duration or `onEndLongPress`
   callback,
   // long press duration in milliseconds
-  ms = 300
+  ms = 100
 ) {
   // used to persist the timer state
   // non zero values means the value has never been fired before

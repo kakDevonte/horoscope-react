@@ -42,19 +42,17 @@ export const ChoiceSign = () => {
   const [signName, setSignName] = React.useState("");
   const [signId, setSignId] = React.useState(null);
   const navigate = useNavigate();
-  const [isOnline, setIsOnline] = React.useState(navigator.onLine);
+  const [isOnline, setIsOnline] = React.useState(true);
+  let interval = null;
+
+  const InternetErrMessenger = () => setIsOnline(navigator.onLine === true);
 
   React.useEffect(() => {
-    const handleStatusChange = () => {
-      setIsOnline(navigator.onLine);
-    };
-    window.addEventListener("online", handleStatusChange);
-    window.addEventListener("offline", handleStatusChange);
+    interval = setInterval(InternetErrMessenger, 3000);
     return () => {
-      window.removeEventListener("online", handleStatusChange);
-      window.removeEventListener("offline", handleStatusChange);
+      clearInterval(interval);
     };
-  }, [isOnline]);
+  }, []);
 
   const onClickSign = async (id, name) => {
     setIsActive(false);
@@ -73,6 +71,10 @@ export const ChoiceSign = () => {
       setDays();
     }
   };
+
+  if (isOnline !== true) {
+    navigate("/404");
+  }
 
   return (
     <div className={styles.root}>
