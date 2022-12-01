@@ -29,8 +29,18 @@ const secondsInDate = () => {
   let date = new Date(
     Date.UTC(now.getFullYear(), now.getMonth(), now.getDate(), 18, 0, 0)
   );
-  const diff = date - new Date();
-  return diff / 1000;
+  const diff = date - now;
+  let result = diff / 1000;
+
+  if (result < 0) {
+    let date = new Date(
+      Date.UTC(now.getFullYear(), now.getMonth(), now.getDate() + 1, 18, 0, 0)
+    );
+    const diff = date - now;
+    result = diff / 1000;
+  }
+
+  return result;
 };
 
 export const Timer = () => {

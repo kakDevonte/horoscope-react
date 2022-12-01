@@ -34,41 +34,39 @@ const regexText = (text) => {
 
 export const HomePage = () => {
   const { scene, user, today } = useHoroscopeState();
-  const {
-    setScene,
-    setFullPredict,
-    setDays,
-    setStars,
-    setDateOfGetStars,
-    addPushNotice,
-    setAdsData,
-    setRemindMe,
-  } = useHoroscopeActions();
+  const { setScene, setFullPredict, addPushNotice, setAdsData, setRemindMe } =
+    useHoroscopeActions();
   const [isShowInfo, seIsShowInfo] = React.useState(false);
   const [isAd, setIsAd] = React.useState(false);
   const [height, setHeight] = React.useState(0);
   const navigate = useNavigate();
   const [textPredict, setTextPredict] = React.useState(
-    user.isFullPredict
+    user.isFullPredict[user.sign]
       ? today[Object.keys(today)[user.sign]]
       : regexText(today[Object.keys(today)[user.sign]])
   );
-  const [isOnline, setIsOnline] = React.useState(true);
-  let interval = null;
 
+  const [isOnline, setIsOnline] = React.useState(true);
+  let intervalOnline = null;
   const InternetErrMessenger = () => setIsOnline(navigator.onLine === true);
 
   React.useEffect(() => {
-    interval = setInterval(InternetErrMessenger, 3000);
+    setTextPredict(
+      user.isFullPredict[user.sign]
+        ? today[Object.keys(today)[user.sign]]
+        : regexText(today[Object.keys(today)[user.sign]])
+    );
+  }, [user]);
+
+  React.useEffect(() => {
+    intervalOnline = setInterval(InternetErrMessenger, 3000);
     return () => {
-      clearInterval(interval);
+      clearInterval(intervalOnline);
     };
   }, []);
-
   React.useEffect(() => {
     (async () => await isShowAd())();
   });
-
   React.useEffect(() => {
     try {
       let btnHeight = 0;
@@ -78,7 +76,7 @@ export const HomePage = () => {
       const h2 = document.getElementById("btn2").getBoundingClientRect();
       const parentPos2 = document.getElementById("btn").getBoundingClientRect();
 
-      if (user.isFullPredict) btnHeight += h2.height * 2;
+      if (user.isFullPredict[user.sign]) btnHeight += h2.height * 2;
 
       setHeight(
         parentPos2.y - parentPos.y - (h2.y - parentPos2.y) / 2 - btnHeight
