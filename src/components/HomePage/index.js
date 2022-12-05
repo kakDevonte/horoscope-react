@@ -34,8 +34,14 @@ const regexText = (text) => {
 
 export const HomePage = () => {
   const { scene, user, today } = useHoroscopeState();
-  const { setScene, setFullPredict, addPushNotice, setAdsData, setRemindMe } =
-    useHoroscopeActions();
+  const {
+    setScene,
+    setFullPredict,
+    addPushNotice,
+    setAdsData,
+    setRemindMe,
+    setDays,
+  } = useHoroscopeActions();
   const [isShowInfo, seIsShowInfo] = React.useState(false);
   const [isAd, setIsAd] = React.useState(false);
   const [height, setHeight] = React.useState(0);
@@ -45,6 +51,8 @@ export const HomePage = () => {
       ? today[Object.keys(today)[user.sign]]
       : regexText(today[Object.keys(today)[user.sign]])
   );
+
+  const [moons, setMoons] = React.useState([]);
 
   const [isOnline, setIsOnline] = React.useState(true);
   let intervalOnline = null;
@@ -56,6 +64,26 @@ export const HomePage = () => {
         ? today[Object.keys(today)[user.sign]]
         : regexText(today[Object.keys(today)[user.sign]])
     );
+  }, [user]);
+
+  React.useEffect(() => {
+    if (!user.isGetTodayDay) {
+      setDays();
+    }
+  }, []);
+  React.useEffect(() => {
+    let content = [];
+    for (let i = 1; i <= MAX_DAY; i++) {
+      content.push(
+        <img
+          key={i}
+          className={styles.moon}
+          src={i <= user.day ? moon[i - 1] : clear}
+          alt={""}
+        />
+      );
+    }
+    setMoons(content);
   }, [user]);
 
   React.useEffect(() => {
@@ -83,21 +111,6 @@ export const HomePage = () => {
       );
     } catch (e) {}
   });
-
-  const getMoon = () => {
-    let content = [];
-    for (let i = 1; i <= MAX_DAY; i++) {
-      content.push(
-        <img
-          key={i}
-          className={styles.moon}
-          src={i <= user.day ? moon[i - 1] : clear}
-          alt={""}
-        />
-      );
-    }
-    return content;
-  };
 
   const isShowAd = async () => {
     const data = await bridge.send("VKWebAppCheckNativeAds", {
@@ -302,7 +315,6 @@ export const HomePage = () => {
   };
 
   const onClickRemindMe = async () => {
-    console.log(user.isClickedOnRemindMe);
     if (user.isClickedOnRemindMe) return;
     let data = await bridge.send("VKWebAppGetLaunchParams");
     console.log(data);
@@ -328,7 +340,7 @@ export const HomePage = () => {
       {isShowInfo && <ModalInfo onClick={onClickShowInfo} />}
       <div className={`${styles.root} ${isShowInfo && styles.bg}`}>
         <div className={styles.header}>
-          <div>{getMoon()}</div>
+          <div>{moons}</div>
           <span className={styles.who} onClick={onClickShowInfo}>
             что это?
           </span>
@@ -411,7 +423,7 @@ export const HomePage = () => {
             <div className={styles.tomorrowContainer}>
               <span>
                 Гороскоп на завтра будет <br /> доступен в{" "}
-                <span className={styles.gradient}>21.00 по МСК</span>
+                <span className={styles.gradient}>10.00 по МСК</span>
               </span>
               <Timer />
               <RepostButton

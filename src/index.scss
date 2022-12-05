@@ -1,21 +1,25 @@
 html, body { }
 body {
+  padding-bottom: 0;
+  padding-left: 0;
+  padding-right: 0;
+  padding-top: env(safe-area-inset-top);
   overflow: hidden;
   margin: 0;
-  padding: 0;
+
   position: fixed;
 
   @media (max-height: 650px) {
-    font-size: 13px;
-  }
-  @media (max-height: 600px) {
     font-size: 12px;
   }
-  @media (max-height: 550px) {
+  @media (max-height: 600px) {
     font-size: 11px;
   }
-  @media (max-height: 500px) {
+  @media (max-height: 550px) {
     font-size: 10px;
+  }
+  @media (max-height: 500px) {
+    font-size: 9px;
   }
   @media (max-width: 350px) {
     font-size: 11px;

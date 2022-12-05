@@ -19,6 +19,7 @@ import {
   useHoroscopeActions,
   useHoroscopeState,
 } from "../../context/horoscope-context";
+import { Loader } from "../Loader";
 
 const signs = [
   { name: "Овен", image: aries },
@@ -36,8 +37,7 @@ const signs = [
 ];
 
 export const ChoiceSign = () => {
-  const { setSign, setDays } = useHoroscopeActions();
-  const { user } = useHoroscopeState();
+  const { setSign } = useHoroscopeActions();
   const [isActive, setIsActive] = React.useState(true);
   const [signName, setSignName] = React.useState("");
   const [signId, setSignId] = React.useState(null);
@@ -66,10 +66,6 @@ export const ChoiceSign = () => {
     }
     setSign(signId);
     navigate("/home");
-
-    if (!user.isGetTodayDay) {
-      setDays();
-    }
   };
 
   if (isOnline !== true) {

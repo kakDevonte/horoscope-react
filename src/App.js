@@ -1,9 +1,16 @@
 import React from "react";
-import { Route, Routes } from "react-router-dom";
+import {
+  BrowserRouter,
+  MemoryRouter,
+  Route,
+  Routes,
+  useNavigate,
+} from "react-router-dom";
 import { Header } from "./components/Header";
 import { ChoiceSign } from "./components/ChoiceSign";
 import { HomePage } from "./components/HomePage";
 import bridge from "@vkontakte/vk-bridge";
+//import bridge from "@vkontakte/vk-bridge-mock";
 import {
   useHoroscopeActions,
   useHoroscopeState,
@@ -15,15 +22,15 @@ import ErrorPage from "./components/ErrorPage";
 
 const App = () => {
   const { getUser, setIsAuth } = useHoroscopeActions();
-  const { isAuth } = useHoroscopeState();
+  const { isAuth, user } = useHoroscopeState();
   const [isLoad, setIsLoad] = React.useState(false);
+  const navigate = useNavigate();
 
   React.useEffect(() => {
     images.forEach((picture) => {
       const img = new Image();
       img.src = picture;
     });
-    setIsLoad(true);
   }, []);
 
   React.useEffect(() => {
@@ -32,6 +39,17 @@ const App = () => {
       getUser(data.id);
     })();
   }, []);
+
+  React.useEffect(() => {
+    if (user.sign !== null) {
+      navigate("/home");
+    } else {
+      navigate("/");
+    }
+    if (!isNaN(user.id)) {
+      setIsLoad(true);
+    }
+  }, [user]);
 
   if (!isLoad)
     return (

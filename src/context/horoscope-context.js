@@ -26,11 +26,11 @@ const predict = {
 
 const initialState = {
   user: {
-    id: 1,
+    id: NaN,
     stars: 0,
-    days: 0,
+    day: 0,
     newcomer: true,
-    sign: 0,
+    sign: null,
     isGetTodayDay: "",
     isFullPredict: true,
     dateOfGetStars: "",
