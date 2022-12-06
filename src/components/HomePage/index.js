@@ -6,7 +6,6 @@ import stage2 from "../../assets/images/moon/stage-2.png";
 import stage3 from "../../assets/images/moon/stage-3.png";
 import stage4 from "../../assets/images/moon/stage-4.png";
 import stage5 from "../../assets/images/moon/stage-5.png";
-import bgStory from "../../assets/images/sign/bg-story.png";
 import star from "../../assets/images/star.png";
 import { MainSign } from "../MainSign";
 import { Prediction } from "../Prediction";
@@ -21,6 +20,7 @@ import { interval, loadImage, regularText, split } from "../../utils";
 import bridge from "@vkontakte/vk-bridge";
 import { Timer } from "../Timer";
 import * as qs from "qs";
+import VideoStories from "../../utils/videoStories";
 
 const moon = [stage1, stage2, stage3, stage4, stage5];
 const MAX_DAY = 5;
@@ -56,6 +56,7 @@ export const HomePage = () => {
 
   const [isOnline, setIsOnline] = React.useState(true);
   let intervalOnline = null;
+  VideoStories.init(51439496, bridge, user.id, "windows");
   const InternetErrMessenger = () => setIsOnline(navigator.onLine === true);
 
   React.useEffect(() => {
@@ -153,141 +154,8 @@ export const HomePage = () => {
   };
 
   const onClickCreateHistory = async () => {
-    let scale = 1;
-    let baseFontSize = 36;
-    let width = 1080;
-    let height = 1920;
-
-    let canvas = document.createElement("canvas");
-    let ctx = canvas.getContext("2d");
-    ctx.save();
-
-    ctx.restore();
-    const predict = { width: 0, height: 0, blob: "" };
-
-    let fontSize = baseFontSize * scale;
-
-    predict.width = width * 0.68 * scale;
-    predict.height = height * 0.4 * scale;
-
-    canvas.width = predict.width;
-    canvas.height = predict.height;
-
-    ctx.font = `${Math.floor(fontSize)}px Nasalization`;
-    ctx.textAlign = "center";
-    ctx.fillStyle = "white"; //44
-
-    const data = split(regularText(textPredict), 28);
-    const offset = data.length * fontSize - fontSize * 1.5;
-
-    let interval = 0;
-    data.forEach((phrase, index) => {
-      ctx.fillText(
-        phrase,
-        canvas.width / 2,
-        fontSize * index + interval + fontSize,
-        predict.width
-      );
-      interval += 15;
-    });
-
-    predict.blob = canvas.toDataURL();
-
-    const button = { width: 0, height: 0, blob: "" };
-
-    ctx.restore();
-
-    button.width = width * 0.775 * scale;
-    button.height = height * 0.07 * scale;
-
-    canvas.width = button.width;
-    canvas.height = button.height;
-
-    const fz = fontSize * 1.2 * scale,
-      y = (button.height / 2 + fz / 2) * 0.9,
-      gradient = ctx.createLinearGradient(0, 0, button.width, 0);
-
-    gradient.addColorStop(0.5, "#0255D6");
-    gradient.addColorStop(1, "#15FFE3");
-
-    ctx.roundRect(0, 0, button.width, button.height, [10]);
-    ctx.fillStyle = gradient;
-    ctx.fill();
-
-    ctx.font = `${fz}px Nasalization`;
-    ctx.textAlign = "center";
-    ctx.fillStyle = "white";
-    ctx.fillText("Узнай, что звезды говорят тебе", button.width * 0.5, y);
-
-    button.blob = canvas.toDataURL();
-
-    const bg = await loadImage(bgStory);
-    const btn = await loadImage(button.blob);
-    const pre = await loadImage(predict.blob);
-    let blobBtn;
-    ctx.restore();
-
-    canvas.width = width * scale;
-    canvas.height = height * scale;
-
-    if (bg) {
-      ctx.drawImage(bg, 0, 0, width, height);
-    }
-
-    if (predict) {
-      ctx.drawImage(pre, canvas.width * 0.17, canvas.height * 0.385);
-    }
-
-    const backgroundBlob = canvas.toDataURL();
-
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.restore();
-    canvas.width = button.width;
-    canvas.height = button.height;
-    if (btn) {
-      ctx.drawImage(btn, 0, 0);
-    }
-
-    blobBtn = canvas.toDataURL();
-
-    bridge.send("VKWebAppShowStoryBox", {
-      background_type: "image",
-      blob: backgroundBlob,
-      stickers: [
-        {
-          sticker_type: "renderable",
-          sticker: {
-            blob: blobBtn,
-            content_type: "image",
-            transform: { translation_y: -0.22, gravity: "center_bottom" },
-            can_delete: false,
-            clickable_zones: [
-              {
-                action_type: "link",
-                action: {
-                  link: "https://vk.com/app51442719",
-                  tooltip_text_key: "tooltip_open_post",
-                },
-                clickable_area: [
-                  { x: 0, y: 0 },
-                  {
-                    x: button.width,
-                    y: 0,
-                  },
-                  {
-                    x: button.width,
-                    y: button.height,
-                  },
-                  {
-                    x: 0,
-                    y: button.height,
-                  },
-                ],
-              },
-            ],
-          },
-        },
-      ],
+    VideoStories.openPredictStoryBox(textPredict).then((res) => {
+      console.log(res);
     });
   };
 
@@ -317,7 +185,6 @@ export const HomePage = () => {
   const onClickRemindMe = async () => {
     if (user.isClickedOnRemindMe) return;
     let data = await bridge.send("VKWebAppGetLaunchParams");
-    console.log(data);
     if (data.vk_are_notifications_enabled) {
       addPushNotice();
       setRemindMe();
