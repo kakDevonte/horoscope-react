@@ -476,6 +476,7 @@ class VideoStories {
     const data = {
       background_type: this._backgroundType,
       locked: true,
+      blob: url,
       stickers: [
         {
           sticker_type: "renderable",
@@ -511,25 +512,25 @@ class VideoStories {
       ],
     };
 
-    if (this._backgroundType === "video ") {
-      data.url = url;
-      data.stickers.push({
-        sticker_type: "renderable",
-        sticker: {
-          content_type: "image",
-          blob: predict.blob,
-          transform: {
-            rotation: 1,
-            gravity: "center",
-            translation_y: -0.118,
-            translation_x: 0.1,
-          },
-          can_delete: false,
-        },
-      });
-    } else {
-      data.blob = url;
-    }
+    // if (this._backgroundType === "video ") {
+    //   data.url = url;
+    //   data.stickers.push({
+    //     sticker_type: "renderable",
+    //     sticker: {
+    //       content_type: "image",
+    //       blob: predict.blob,
+    //       transform: {
+    //         rotation: 1,
+    //         gravity: "center",
+    //         translation_y: -0.118,
+    //         translation_x: 0.1,
+    //       },
+    //       can_delete: false,
+    //     },
+    //   });
+    // } else {
+    //
+    // }
 
     data.stickers.push(this._createClickSticker());
 
