@@ -16,11 +16,11 @@ import {
   useHoroscopeActions,
   useHoroscopeState,
 } from "../../context/horoscope-context";
-import { interval, loadImage, regularText, split } from "../../utils";
+import { interval } from "../../utils";
 import bridge from "@vkontakte/vk-bridge";
 import { Timer } from "../Timer";
-import * as qs from "qs";
 import VideoStories from "../../utils/videoStories";
+import { Loader } from "../Loader";
 
 const moon = [stage1, stage2, stage3, stage4, stage5];
 const MAX_DAY = 5;
@@ -33,7 +33,7 @@ const regexText = (text) => {
 };
 
 export const HomePage = () => {
-  const { scene, user, today } = useHoroscopeState();
+  const { scene, user, today, isLoading } = useHoroscopeState();
   const {
     setScene,
     setFullPredict,
@@ -72,6 +72,7 @@ export const HomePage = () => {
       setDays();
     }
   }, []);
+
   React.useEffect(() => {
     let content = [];
     for (let i = 1; i <= MAX_DAY; i++) {
@@ -93,9 +94,11 @@ export const HomePage = () => {
       clearInterval(intervalOnline);
     };
   }, []);
+
   React.useEffect(() => {
     (async () => await isShowAd())();
   });
+
   React.useEffect(() => {
     try {
       let btnHeight = 0;
@@ -202,6 +205,14 @@ export const HomePage = () => {
     navigate("/404");
   }
 
+  if (isLoading) {
+    return (
+      <div className="loader">
+        <Loader />
+      </div>
+    );
+  }
+
   return (
     <div className={`${styles.home} ${isShowInfo && styles.bg}`}>
       {isShowInfo && <ModalInfo onClick={onClickShowInfo} />}
@@ -264,7 +275,7 @@ export const HomePage = () => {
                   onClick={onClickGetFullPredict}
                 >
                   <span className={styles.adBtnText}>
-                    Читать полностью за 2 <img src={star} />
+                    Читать полностью за 2 <img src={star} alt={"иконка"} />
                   </span>
                 </button>
                 <button
@@ -278,9 +289,9 @@ export const HomePage = () => {
                   <span className={styles.adBtnText}>
                     {"Посмотреть рекламу"}
                     {" +2 "}
-                    <img src={star} />
+                    <img src={star} alt={"иконка"} />
                     {" +1 "}
-                    <img src={stage1} />
+                    <img src={stage1} alt={"иконка"} />
                   </span>
                 </button>
               </div>

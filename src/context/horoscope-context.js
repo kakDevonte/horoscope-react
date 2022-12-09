@@ -5,6 +5,7 @@ const SET_USER = "SET_USER";
 const SET_SCENE = "SET_SCENE";
 const SET_IS_AUTH = "SET_IS_AUTH";
 const SET_PREDICT = "SET_PREDICT";
+const SET_IS_LOADING = "SET_IS_LOADING";
 
 let horoscopeIsNotMade = "Астролог уже составляет ваш гороскоп, зайдите позже.";
 
@@ -41,6 +42,7 @@ const initialState = {
   isAuth: false,
   today: predict,
   tomorrow: predict,
+  isLoading: true,
 };
 const HoroscopeContext = React.createContext();
 
@@ -48,12 +50,22 @@ export const HoroscopeContextProvider = (props) => {
   const [state, dispatch] = React.useReducer(reducer, initialState);
 
   const actions = {
+    setIsLoading: (state) => {
+      dispatch({
+        type: SET_IS_LOADING,
+        payload: state,
+      });
+    },
     getUser: async (id) => {
       try {
         const data = await horoscopeAPI.getData(id);
         dispatch({
           type: SET_USER,
           payload: data.data,
+        });
+        dispatch({
+          type: SET_IS_LOADING,
+          payload: false,
         });
         dispatch({
           type: SET_PREDICT,
@@ -88,6 +100,10 @@ export const HoroscopeContextProvider = (props) => {
         dispatch({
           type: SET_USER,
           payload: data.data,
+        });
+        dispatch({
+          type: SET_IS_LOADING,
+          payload: false,
         });
       } catch (e) {}
     },
@@ -169,6 +185,9 @@ const reducer = (state, action) => {
     }
     case SET_IS_AUTH: {
       return { ...state, isAuth: action.payload };
+    }
+    case SET_IS_LOADING: {
+      return { ...state, isLoading: action.payload };
     }
     case SET_PREDICT: {
       return {

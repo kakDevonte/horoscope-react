@@ -17,7 +17,6 @@ import {
 } from "./context/horoscope-context";
 import { Loader } from "./components/Loader";
 import "./App.scss";
-import { images } from "./utils";
 import ErrorPage from "./components/ErrorPage";
 
 const App = () => {
@@ -25,13 +24,6 @@ const App = () => {
   const { isAuth, user } = useHoroscopeState();
   const [isLoad, setIsLoad] = React.useState(false);
   const navigate = useNavigate();
-
-  React.useEffect(() => {
-    images.forEach((picture) => {
-      const img = new Image();
-      img.src = picture;
-    });
-  }, []);
 
   React.useEffect(() => {
     (async () => {

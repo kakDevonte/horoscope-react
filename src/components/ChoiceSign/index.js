@@ -37,7 +37,7 @@ const signs = [
 ];
 
 export const ChoiceSign = () => {
-  const { setSign } = useHoroscopeActions();
+  const { setSign, setIsLoading } = useHoroscopeActions();
   const [isActive, setIsActive] = React.useState(true);
   const [signName, setSignName] = React.useState("");
   const [signId, setSignId] = React.useState(null);
@@ -64,6 +64,7 @@ export const ChoiceSign = () => {
     if (!isOnline) {
       navigate("/404");
     }
+    setIsLoading(true);
     setSign(signId);
     navigate("/home");
   };
