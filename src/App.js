@@ -1,16 +1,10 @@
 import React from "react";
-import {
-  BrowserRouter,
-  MemoryRouter,
-  Route,
-  Routes,
-  useNavigate,
-} from "react-router-dom";
+import { Route, Routes, useNavigate } from "react-router-dom";
 import { Header } from "./components/Header";
 import { ChoiceSign } from "./components/ChoiceSign";
 import { HomePage } from "./components/HomePage";
-import bridge from "@vkontakte/vk-bridge";
-//import bridge from "@vkontakte/vk-bridge-mock";
+import bridgeOrigin from "@vkontakte/vk-bridge";
+import bridgeMock from "@vkontakte/vk-bridge-mock";
 import {
   useHoroscopeActions,
   useHoroscopeState,
@@ -19,9 +13,11 @@ import { Loader } from "./components/Loader";
 import "./App.scss";
 import ErrorPage from "./components/ErrorPage";
 
+const bridge = true ? bridgeOrigin : bridgeMock; //  "homepage": "./",
+
 const App = () => {
-  const { getUser, setIsAuth } = useHoroscopeActions();
-  const { isAuth, user } = useHoroscopeState();
+  const { getUser } = useHoroscopeActions();
+  const { user } = useHoroscopeState();
   const [isLoad, setIsLoad] = React.useState(false);
   const navigate = useNavigate();
 
