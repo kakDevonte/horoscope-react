@@ -1,5 +1,8 @@
 import { randomFromArray, randomNumber } from "./Common";
-import bgStory from "../assets/images/sign/bg-story.png";
+import qs from "qs";
+
+let parsed = qs.parse(window.location.href);
+const FONT = parsed.odr_enabled ? 12 : 36;
 
 CanvasRenderingContext2D.prototype.roundRect = function (
   x,
@@ -75,7 +78,7 @@ class VideoStories {
       this._width = 1080;
       this._height = 1920;
       this._translateButton = -0.138;
-      this._baseFontSize = 36;
+      this._baseFontSize = FONT;
       this._backgroundType = "image";
       this._fileType = ".jpg";
     }
@@ -93,7 +96,10 @@ class VideoStories {
   openPredictStoryBox(predict, type) {
     if (!this._init) return this._noInit();
     if (!predict) type = "special";
-    let url = bgStory;
+    const imageUrl = "https://i.postimg.cc/DZJJgWP4/Story.png";
+
+    //let url = bgStory;
+    let url = imageUrl;
 
     this._translateButton =
       this._os === "iOS" || this._os === "Android" ? -0.125 : -0.138;
@@ -162,12 +168,7 @@ class VideoStories {
 
   _processing(url, predict, type) {
     this._fontSize = this._baseFontSize + 2 * ((this._width - 320) / 680);
-    predict = type !== "special" ? this._createPredict(predict) : {};
-
-    if (this._backgroundType === "image")
-      return this._createBgImage(url, predict).then((blob) =>
-        this._openStoryBox(blob, this._createButton(type))
-      );
+    predict = this._createPredict(predict);
 
     return this._openStoryBox(url, this._createButton(type), predict);
   }
@@ -294,9 +295,6 @@ class VideoStories {
 
     this._canvas.width = predict.width;
     this._canvas.height = predict.height;
-
-    //this._ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
-    //this._ctx.fillRect(0, 0, predict.width, predict.height);
 
     data = this._pretend(text);
 
@@ -476,7 +474,7 @@ class VideoStories {
     const data = {
       background_type: this._backgroundType,
       locked: true,
-      blob: url,
+      url: "https://i.postimg.cc/DZJJgWP4/Story.png",
       stickers: [
         {
           sticker_type: "renderable",
@@ -488,49 +486,20 @@ class VideoStories {
               translation_y: this._translateButton,
             },
             can_delete: false,
-            // clickable_zones: [
-            //   {
-            //     // action_type: "app",
-            //     // action: {
-            //     //   app_id: this._app_id,
-            //     //   app_context: "sp=" + this._uid
-            //     // },
-            //     action_type: "link",
-            //     action: {
-            //       link: "https://vk.com/" + this._app_name + "#sp" + this._uid,
-            //     },
-            //     clickable_area: [
-            //       { x: 0, y: 0 },
-            //       { x: button.width, y: 0 },
-            //       { x: button.width, y: button.height },
-            //       { x: 0, y: button.height },
-            //     ],
-            //   },
-            // ],
           },
         },
       ],
     };
 
-    // if (this._backgroundType === "video ") {
-    //   data.url = url;
-    //   data.stickers.push({
-    //     sticker_type: "renderable",
-    //     sticker: {
-    //       content_type: "image",
-    //       blob: predict.blob,
-    //       transform: {
-    //         rotation: 1,
-    //         gravity: "center",
-    //         translation_y: -0.118,
-    //         translation_x: 0.1,
-    //       },
-    //       can_delete: false,
-    //     },
-    //   });
-    // } else {
-    //
-    // }
+    data.stickers.push({
+      sticker_type: "renderable",
+      sticker: {
+        content_type: "image",
+        blob: predict.blob,
+        can_delete: false,
+        locked: true,
+      },
+    });
 
     data.stickers.push(this._createClickSticker());
 

@@ -157,7 +157,11 @@ export const HomePage = () => {
   };
 
   const onClickCreateHistory = async () => {
-    VideoStories.openPredictStoryBox(textPredict).then((res) => {
+    const predict = user.isFullPredict[user.sign]
+      ? today[Object.keys(today)[user.sign]]
+      : regexText(today[Object.keys(today)[user.sign]]);
+
+    VideoStories.openPredictStoryBox(predict).then((res) => {
       console.log(res);
     });
   };

@@ -39,7 +39,6 @@ const secondsInDate = () => {
     const diff = date - now;
     result = diff / 1000;
   }
-
   return result;
 };
 
